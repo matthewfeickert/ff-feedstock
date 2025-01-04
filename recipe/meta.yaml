@@ -10,13 +10,13 @@ source:
   sha256: 0f72c620bca93f62deed3194b56b34e66071c512cb8bc63be7aeedc35be7cbfc
 
 build:
-  number: 0
+  number: 1
 
 outputs:
   - name: {{ name }}-static
 
     build:
-      skip: true  # [win or (osx and x86)]
+      skip: true  # [win]
       script:
         # FIXME: Patch out custom paths
         # Note: Need the space at the end of '$PREFIX/share/ff/ ' so that
