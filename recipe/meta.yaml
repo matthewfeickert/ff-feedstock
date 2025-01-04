@@ -15,13 +15,13 @@ source:
       - allow-longer-paths-for-ffopen.patch
 
 build:
-  number: 1
+  number: 2
 
 outputs:
   - name: {{ name }}-static
 
     build:
-      skip: true  # [win or (osx and x86)]
+      skip: true  # [win]
       script:
         # FIXME: Patch out custom paths
         # Note: Need the space at the end of '$PREFIX/share/ff/ ' so that
