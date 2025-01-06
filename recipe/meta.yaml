@@ -27,6 +27,7 @@ outputs:
         # This is a bug and should get fixed by using better logic for fullname.
         - sed -i "s|/user/gj/lib/|$PREFIX/share/ff/ |g" src/ff/ffinit.f
         - sed -i "s|/usr/local/ff/|$PREFIX/share/ff/ |g" src/ff/ffinit.f
+        - cat src/ff/ffinit.f
 
         - cd src/ff
         - make install FC=$FC FFLAGS="$FFLAGS -std=legacy -ffixed-line-length-none" DEST=$PREFIX/lib --jobs="${CPU_COUNT}"
