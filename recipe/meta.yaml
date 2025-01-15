@@ -36,9 +36,6 @@ outputs:
         - sed -i "s|/usr/local/ff/|$PREFIX/share/ff/ |g" src/ff/ffinit.f
         - cat src/ff/ffinit.f
 
-        # DEBUG
-        - export FFLAGS="-isystem $PREFIX/include"  # [osx and x86]
-
         - cd src/ff
         - make install FC=$FC FFLAGS="$FFLAGS -std=legacy -ffixed-line-length-none" DEST=$PREFIX/lib --jobs="${CPU_COUNT}"
         - mkdir -p $PREFIX/include/ff
