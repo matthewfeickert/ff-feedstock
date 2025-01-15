@@ -1,0 +1,25 @@
+From 160fa05b9a9082493db00f42e945c5c9e7f7ebbd Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Wed, 15 Jan 2025 00:52:24 -0700
+Subject: [PATCH] debug-explicitly-init-variables
+
+---
+ src/ff/ffinit.f | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/ff/ffinit.f b/src/ff/ffinit.f
+index 7602e3c..1c8fd6f 100644
+--- a/src/ff/ffinit.f
++++ b/src/ff/ffinit.f
+@@ -757,6 +757,8 @@
+ *
+ 	logical lopen
+ 	character*512 path,fullname
++	path = ' '
++	fullname = ' '
+ *
+ 	include 'ff.h'
+ *
+-- 
+2.47.1
+

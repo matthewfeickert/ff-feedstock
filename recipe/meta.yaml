@@ -13,6 +13,8 @@ source:
       - update-makefile.patch
       # c.f. https://github.com/hep-packaging-coordination/ff/pull/8
       - allow-longer-paths-for-ffopen.patch
+      # debug
+      - debug-explicitly-init-variables.patch
 
 build:
   number: 2
