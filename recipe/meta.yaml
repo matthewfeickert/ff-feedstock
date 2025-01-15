@@ -14,7 +14,7 @@ source:
       # c.f. https://github.com/hep-packaging-coordination/ff/pull/8
       - allow-longer-paths-for-ffopen.patch
       # debug
-      - debug-explicitly-init-variables.patch
+      # - debug-explicitly-init-variables.patch
 
 build:
   number: 2
@@ -37,6 +37,10 @@ outputs:
         - cat src/ff/ffinit.f
 
         - cd src/ff
+        # FIXME: DEBUG: disable range checks that might trigger padding
+        # https://gcc.gnu.org/onlinedocs/gfortran/Fortran-Dialect-Options.html#index-frange-check
+        - export FFLAGS="$FFLAGS -fno-range-check"  # [osx and x86]
+
         - make install FC=$FC FFLAGS="$FFLAGS -std=legacy -ffixed-line-length-none" DEST=$PREFIX/lib --jobs="${CPU_COUNT}"
         - mkdir -p $PREFIX/include/ff
         - mv *.h $PREFIX/include/ff
