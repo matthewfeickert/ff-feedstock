@@ -38,10 +38,10 @@ outputs:
 
         - cd src/ff
         - # DEBUG: Unset everything
-        - export FFLAGS=""
         # FIXME: DEBUG: disable range checks that might trigger padding
         # https://gcc.gnu.org/onlinedocs/gfortran/Fortran-Dialect-Options.html#index-frange-check
-        - export FFLAGS="$FFLAGS -fno-range-check"  # [osx and x86]
+        # - export FFLAGS="$FFLAGS -fno-range-check"  # [osx and x86]
+        - export FFLAGS="-fno-range-check"  # [osx and x86]
 
         - make install FC=$FC FFLAGS="$FFLAGS -std=legacy -ffixed-line-length-none" DEST=$PREFIX/lib --jobs="${CPU_COUNT}"
         - mkdir -p $PREFIX/include/ff
