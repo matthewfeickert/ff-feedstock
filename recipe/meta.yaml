@@ -37,6 +37,8 @@ outputs:
         - cat src/ff/ffinit.f
 
         - cd src/ff
+        - # DEBUG: Unset everything
+        - export FFLAGS=""
         # FIXME: DEBUG: disable range checks that might trigger padding
         # https://gcc.gnu.org/onlinedocs/gfortran/Fortran-Dialect-Options.html#index-frange-check
         - export FFLAGS="$FFLAGS -fno-range-check"  # [osx and x86]
