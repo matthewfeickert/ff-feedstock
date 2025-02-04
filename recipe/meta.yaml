@@ -1,21 +1,16 @@
 {% set name = "ff" %}
-{% set version = "2.0.0" %}
+{% set version = "2.0.1" %}
 
 package:
   name: {{ name }}
   version: {{ version }}
 
 source:
-    url: https://github.com/hep-packaging-coordination/ff/archive/v{{ version }}.tar.gz
-    sha256: 2329b3ca147825b660e07dac45ed85d397a1bea2f6b886518eb4d09900da5503
-    patches:
-      # Can be removed after the patched QCDLoop version is merged in v2.0.1.
-      - update-makefile.patch
-      # c.f. https://github.com/hep-packaging-coordination/ff/pull/8
-      - allow-longer-paths-for-ffopen.patch
+  url: https://github.com/hep-packaging-coordination/ff/archive/v{{ version }}.tar.gz
+  sha256: 0f72c620bca93f62deed3194b56b34e66071c512cb8bc63be7aeedc35be7cbfc
 
 build:
-  number: 1
+  number: 0
 
 outputs:
   - name: {{ name }}-static
