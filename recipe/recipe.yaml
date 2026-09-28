@@ -1,0 +1,87 @@
+schema_version: 1
+
+context:
+  version: "2.0.1"
+
+recipe:
+  name: ff
+  version: ${{ version }}
+
+source:
+  url: https://github.com/hep-packaging-coordination/ff/archive/v${{ version }}.tar.gz
+  sha256: 0f72c620bca93f62deed3194b56b34e66071c512cb8bc63be7aeedc35be7cbfc
+  patches:
+    - look-up-data-files-under-conda-prefix.patch
+
+build:
+  number: 1
+  skip:
+    - win
+    - osx and x86_64
+
+outputs:
+  - package:
+      name: ff-static
+    build:
+      script:
+        - cd src/ff
+        - make install FC=$FC FFLAGS="$FFLAGS -std=legacy -ffixed-line-length-none" DEST=$PREFIX/lib --jobs="${CPU_COUNT}"
+        - mkdir -p $PREFIX/include/ff
+        - mv *.h $PREFIX/include/ff
+        - mkdir -p $PREFIX/share/ff
+        - mv *.dat $PREFIX/share/ff/
+    requirements:
+      build:
+        - ${{ stdlib('c') }}
+        - ${{ compiler('fortran') }}
+        - make
+        - libtool
+
+    tests:
+      - package_contents:
+          lib:
+            - libff.a
+          include:
+            - ff/aa.h
+            - ff/ff.h
+            - ff/ffs.h
+          files:
+            - share/ff/fferr.dat
+            - share/ff/ffperm5.dat
+            - share/ff/ffwarn.dat
+
+      - files:
+          source:
+            - src/ff/npointes.f
+        requirements:
+          run:
+            - fortran-compiler
+            - grep
+        script:
+          - export FC=gfortran
+          - export FFLAGS="-O2"
+          - export LDFLAGS="-L$PREFIX/lib -Wl,-rpath,$PREFIX/lib"
+          - $FC ./src/ff/npointes.f -o npointes $FFLAGS -I$PREFIX/include/ff $LDFLAGS -lff
+          - ./npointes > npointes.log
+          - cat npointes.log
+          # Ensure the data files are found at runtime
+          - if grep -q "could not open" npointes.log; then exit 1; fi
+
+about:
+  homepage: https://github.com/hep-packaging-coordination/ff
+  summary: "FF: a package to evaluate one-loop integrals"
+  description: |
+    FF is a package to evaluate one-loop integrals written by G. J.
+    van Oldenborgh, NIKHEF-H, Amsterdam. For the the algorithms used see
+    preprint NIKHEF-H 89/17, 'New Algorithms for One-loop Integrals', by
+    G.J. van Oldenborgh and J.A.M. Vermaseren, published in Zeitschrift
+    fuer Physik C46(1990)425.
+    [DOI: 10.1007/BF01621031](https://doi.org/10.1007/BF01621031)
+  license: MIT
+  license_file: LICENSE
+  repository: https://github.com/hep-packaging-coordination/ff
+
+extra:
+  feedstock-name: ff
+  recipe-maintainers:
+    - matthewfeickert
