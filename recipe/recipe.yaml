@@ -10,9 +10,11 @@ recipe:
 source:
   url: https://github.com/hep-packaging-coordination/ff/archive/v${{ version }}.tar.gz
   sha256: 0f72c620bca93f62deed3194b56b34e66071c512cb8bc63be7aeedc35be7cbfc
+  patches:
+    - look-up-data-files-under-conda-prefix.patch
 
 build:
-  number: 0
+  number: 1
   skip:
     - win
     - osx and x86_64
@@ -22,16 +24,6 @@ outputs:
       name: ff-static
     build:
       script:
-        # FIXME: Patch out custom paths
-        # Note: Need the space at the end of '$PREFIX/share/ff/ ' so that
-        #
-        # fullname = path(1:index(path,' ')-1)//names
-        #
-        # in src/ff/ffinit.f can have a space to split on.
-        # This is a bug and should get fixed by using better logic for fullname.
-        - sed -i "s|/user/gj/lib/|$PREFIX/share/ff/ |g" src/ff/ffinit.f
-        - sed -i "s|/usr/local/ff/|$PREFIX/share/ff/ |g" src/ff/ffinit.f
-
         - cd src/ff
         - make install FC=$FC FFLAGS="$FFLAGS -std=legacy -ffixed-line-length-none" DEST=$PREFIX/lib --jobs="${CPU_COUNT}"
         - mkdir -p $PREFIX/include/ff
@@ -44,7 +36,6 @@ outputs:
         - ${{ compiler('fortran') }}
         - make
         - libtool
-        - sed
 
     tests:
       - package_contents:
@@ -71,7 +62,10 @@ outputs:
           - export FFLAGS="-O2"
           - export LDFLAGS="-L$PREFIX/lib -Wl,-rpath,$PREFIX/lib"
           - $FC ./src/ff/npointes.f -o npointes $FFLAGS -I$PREFIX/include/ff $LDFLAGS -lff
-          - ./npointes
+          - ./npointes > npointes.log
+          - cat npointes.log
+          # Ensure the data files are found at runtime
+          - if grep -q "could not open" npointes.log; then exit 1; fi
 
 about:
   homepage: https://github.com/hep-packaging-coordination/ff
