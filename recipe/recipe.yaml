@@ -1,7 +1,7 @@
 schema_version: 1
 
 context:
-  version: "2.0.1"
+  version: "2.1.0"
 
 recipe:
   name: ff
@@ -9,12 +9,12 @@ recipe:
 
 source:
   url: https://github.com/hep-packaging-coordination/ff/archive/v${{ version }}.tar.gz
-  sha256: 0f72c620bca93f62deed3194b56b34e66071c512cb8bc63be7aeedc35be7cbfc
+  sha256: 69b39cf8ee9091f9137a29f754a63f228e3b14210e70f8049e55f58e98c68431
   patches:
     - look-up-data-files-under-conda-prefix.patch
 
 build:
-  number: 2
+  number: 0
   skip:
     - win
 
